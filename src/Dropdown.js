@@ -23,18 +23,18 @@ const propTypes = {
   toggle: PropTypes.func,
   children: PropTypes.node,
   className: PropTypes.string,
-  cssModule: PropTypes.object,
+  cssModule: PropTypes.object
 };
 
 const defaultProps = {
   isOpen: false,
   tag: 'div',
-  placementPrefix: 'dropdown-menu',
+  placementPrefix: 'dropdown-menu'
 };
 
 const childContextTypes = {
   toggle: PropTypes.func.isRequired,
-  isOpen: PropTypes.bool.isRequired,
+  isOpen: PropTypes.bool.isRequired
 };
 
 let i = 0;
@@ -111,12 +111,12 @@ class Dropdown extends React.Component {
   renderChildren() {
     const { children, dropup, right, ...attrs } = omit(this.props, ['toggle', 'tag']);
 
-    return React.Children.map(React.Children.toArray(children), (child) => {
+    return React.Children.map(React.Children.toArray(children), child => {
       if (child.type === DropdownToggle || child.props['data-toggle'] === 'dropdown') {
         this.id = this.id || child.props.id || `dropdown-${++i}`;
         return React.cloneElement(child, { id: this.id });
       }
-      if (child.type === DropdownMenu) {
+      if (child.type === DropdownMenu || child.props.type === 'dropdown-menu') {
         let position1 = 'bottom';
         let position2 = 'start';
         if (dropup) {
@@ -127,10 +127,9 @@ class Dropdown extends React.Component {
         }
         attrs.placement = `${position1}-${position2}`;
         return (
-          <PopperContent
-            {...attrs}
-            target={this.id}
-          >{child}</PopperContent>
+          <PopperContent {...attrs} target={this.id}>
+            {child}
+          </PopperContent>
         );
       }
 
@@ -139,33 +138,24 @@ class Dropdown extends React.Component {
   }
 
   render() {
-    const {
-      className,
-      cssModule,
-      dropup,
-      group,
-      size,
-      tag: Tag,
-      isOpen,
-      ...attributes
-    } = omit(this.props, ['toggle', 'placementPrefix', 'right']);
+    const { className, cssModule, dropup, group, size, tag: Tag, isOpen, ...attributes } = omit(
+      this.props,
+      ['toggle', 'placementPrefix', 'right']
+    );
 
-    const classes = mapToCssModules(classNames(
-      className,
-      {
+    const classes = mapToCssModules(
+      classNames(className, {
         'btn-group': group,
         [`btn-group-${size}`]: !!size,
         dropdown: !group,
         show: isOpen,
         dropup: dropup
-      }
-    ), cssModule);
+      }),
+      cssModule
+    );
 
     return (
-      <Tag
-        {...attributes}
-        className={classes}
-      >
+      <Tag {...attributes} className={classes}>
         {this.renderChildren()}
       </Tag>
     );

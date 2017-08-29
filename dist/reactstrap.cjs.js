@@ -1068,7 +1068,7 @@ var Dropdown = function (_React$Component) {
           _this2.id = _this2.id || child.props.id || 'dropdown-' + ++i;
           return React__default.cloneElement(child, { id: _this2.id });
         }
-        if (child.type === DropdownMenu) {
+        if (child.type === DropdownMenu || child.props.type === 'dropdown-menu') {
           var position1 = 'bottom';
           var position2 = 'start';
           if (dropup) {
@@ -1080,9 +1080,7 @@ var Dropdown = function (_React$Component) {
           attrs.placement = position1 + '-' + position2;
           return React__default.createElement(
             PopperContent,
-            _extends({}, attrs, {
-              target: _this2.id
-            }),
+            _extends({}, attrs, { target: _this2.id }),
             child
           );
         }
@@ -1111,9 +1109,7 @@ var Dropdown = function (_React$Component) {
 
       return React__default.createElement(
         Tag,
-        _extends({}, attributes, {
-          className: classes
-        }),
+        _extends({}, attributes, { className: classes }),
         this.renderChildren()
       );
     }
