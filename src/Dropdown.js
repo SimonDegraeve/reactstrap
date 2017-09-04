@@ -4,22 +4,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
+import { Manager } from 'react-popper';
 import classNames from 'classnames';
 import { mapToCssModules, omit } from './utils';
-import PopperContent from './PopperContent';
-import DropdownMenu from './DropdownMenu';
-import DropdownToggle from './DropdownToggle';
 
 const propTypes = {
   disabled: PropTypes.bool,
   dropup: PropTypes.bool,
-  right: PropTypes.bool,
-  placementPrefix: PropTypes.string,
   group: PropTypes.bool,
   isOpen: PropTypes.bool,
   size: PropTypes.string,
   tag: PropTypes.string,
-  tether: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
   toggle: PropTypes.func,
   children: PropTypes.node,
   className: PropTypes.string,
@@ -28,16 +23,23 @@ const propTypes = {
 
 const defaultProps = {
   isOpen: false,
+  dropup: false,
   tag: 'div',
+<<<<<<< HEAD
   placementPrefix: 'dropdown-menu'
+=======
+>>>>>>> popper
 };
 
 const childContextTypes = {
   toggle: PropTypes.func.isRequired,
+<<<<<<< HEAD
   isOpen: PropTypes.bool.isRequired
+=======
+  isOpen: PropTypes.bool.isRequired,
+  dropup: PropTypes.bool.isRequired,
+>>>>>>> popper
 };
-
-let i = 0;
 
 class Dropdown extends React.Component {
   constructor(props) {
@@ -52,7 +54,8 @@ class Dropdown extends React.Component {
   getChildContext() {
     return {
       toggle: this.props.toggle,
-      isOpen: this.props.isOpen
+      isOpen: this.props.isOpen,
+      dropup: this.props.dropup,
     };
   }
 
@@ -89,10 +92,6 @@ class Dropdown extends React.Component {
   }
 
   handleProps() {
-    if (this.props.tether) {
-      return;
-    }
-
     if (this.props.isOpen) {
       this.addEvents();
     } else {
@@ -105,6 +104,7 @@ class Dropdown extends React.Component {
       return e && e.preventDefault();
     }
 
+<<<<<<< HEAD
     return this.props.toggle();
   }
 
@@ -145,11 +145,31 @@ class Dropdown extends React.Component {
 
     const classes = mapToCssModules(
       classNames(className, {
+=======
+    return this.props.toggle(e);
+  }
+
+  render() {
+    const {
+      className,
+      cssModule,
+      dropup,
+      isOpen,
+      group,
+      size,
+      ...attrs
+    } = omit(this.props, ['toggle', 'disabled']);
+
+    const classes = mapToCssModules(classNames(
+      className,
+      {
+>>>>>>> popper
         'btn-group': group,
         [`btn-group-${size}`]: !!size,
         dropdown: !group,
         show: isOpen,
         dropup: dropup
+<<<<<<< HEAD
       }),
       cssModule
     );
@@ -159,6 +179,11 @@ class Dropdown extends React.Component {
         {this.renderChildren()}
       </Tag>
     );
+=======
+      }
+    ), cssModule);
+    return <Manager {...attrs} className={classes}>{}</Manager>;
+>>>>>>> popper
   }
 }
 

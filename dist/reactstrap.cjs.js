@@ -79,6 +79,7 @@ var warned = {};
 
 function warnOnce(message) {
   if (!warned[message]) {
+    /* istanbul ignore else */
     if (typeof console !== 'undefined') {
       console.error(message); // eslint-disable-line no-console
     }
@@ -102,7 +103,7 @@ function deprecated(propType, explanation) {
 
 function DOMElement(props, propName, componentName) {
   if (!(props[propName] instanceof Element)) {
-    return new Error('Invalid prop `' + propName + '` supplied to' + ' `' + componentName + '`. Validation failed.');
+    return new Error('Invalid prop `' + propName + '` supplied to `' + componentName + '`. Expected prop to be an instance of Element. Validation failed.');
   }
 }
 
@@ -378,7 +379,7 @@ var Col = function Col(props) {
 
     delete attributes[colWidth];
 
-    if (!columnProp) {
+    if (!columnProp && columnProp !== '') {
       return;
     }
 
@@ -608,348 +609,16 @@ var NavItem = function NavItem(props) {
 NavItem.propTypes = propTypes$7;
 NavItem.defaultProps = defaultProps$7;
 
-var PopperTargetHelper = function PopperTargetHelper(props, context) {
-  context.popperManager.setTargetNode(getTarget(props.target));
-  return null;
-};
-
-PopperTargetHelper.contextTypes = {
-  popperManager: PropTypes.object.isRequired
-};
-
-PopperTargetHelper.propTypes = {
-  target: PropTypes.oneOfType([PropTypes.string, PropTypes.func, DOMElement]).isRequired
-};
-
-var propTypes$10 = {
-  children: PropTypes.node.isRequired,
-  className: PropTypes.string,
-  placement: PropTypes.string,
-  placementPrefix: PropTypes.string,
-  tag: PropTypes.string,
-  isOpen: PropTypes.bool.isRequired,
-  cssModule: PropTypes.object,
-  offset: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  fallbackPlacement: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
-  target: PropTypes.oneOfType([PropTypes.string, PropTypes.func, DOMElement]).isRequired
-};
-
-var defaultProps$10 = {
-  placement: 'auto',
-  isOpen: false,
-  offset: 0,
-  fallbackPlacement: 'flip',
-  tag: 'span'
-};
-
-var PopperContent = function (_React$Component) {
-  inherits(PopperContent, _React$Component);
-
-  function PopperContent(props) {
-    classCallCheck(this, PopperContent);
-
-    var _this = possibleConstructorReturn(this, (PopperContent.__proto__ || Object.getPrototypeOf(PopperContent)).call(this, props));
-
-    _this.handlePlacementChange = _this.handlePlacementChange.bind(_this);
-    _this.state = {};
-    return _this;
-  }
-
-  createClass(PopperContent, [{
-    key: 'handlePlacementChange',
-    value: function handlePlacementChange(data) {
-      if (this.state.placement !== data.placement) {
-        this.setState({ placement: data.placement });
-      }
-      return data;
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      var _props = this.props,
-          cssModule = _props.cssModule,
-          children = _props.children,
-          isOpen = _props.isOpen,
-          target = _props.target,
-          offset = _props.offset,
-          fallbackPlacement = _props.fallbackPlacement,
-          placementPrefix = _props.placementPrefix,
-          className = _props.className,
-          tag = _props.tag,
-          attrs = objectWithoutProperties(_props, ['cssModule', 'children', 'isOpen', 'target', 'offset', 'fallbackPlacement', 'placementPrefix', 'className', 'tag']);
-
-      var arrowClassName = mapToCssModules('arrow', cssModule);
-      var placement = (this.state.placement || attrs.placement).split('-')[0];
-      var popperClassName = mapToCssModules(classNames(className, placementPrefix ? placementPrefix + '-' + placement : placement), this.props.cssModule);
-
-      var modifiers = {
-        offset: { offset: offset },
-        flip: { behavior: fallbackPlacement },
-        update: {
-          enabled: true,
-          order: 950,
-          fn: this.handlePlacementChange
-        }
-      };
-
-      return React__default.createElement(
-        reactPopper.Manager,
-        { tag: tag },
-        React__default.createElement(PopperTargetHelper, { target: target }),
-        isOpen && React__default.createElement(
-          reactPopper.Popper,
-          _extends({ modifiers: modifiers }, attrs, { className: popperClassName }),
-          children,
-          React__default.createElement(reactPopper.Arrow, { className: arrowClassName })
-        )
-      );
-    }
-  }]);
-  return PopperContent;
-}(React__default.Component);
-
-PopperContent.propTypes = propTypes$10;
-PopperContent.defaultProps = defaultProps$10;
-
-var propTypes$11 = {
-  tag: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-  children: PropTypes.node.isRequired,
-  right: PropTypes.bool,
-  className: PropTypes.string,
-  cssModule: PropTypes.object
-};
-
-var defaultProps$11 = {
-  tag: 'div'
-};
-
-var contextTypes = {
-  isOpen: PropTypes.bool.isRequired
-};
-
-var DropdownMenu = function DropdownMenu(props, context) {
-  var className = props.className,
-      cssModule = props.cssModule,
-      right = props.right,
-      Tag = props.tag,
-      attributes = objectWithoutProperties(props, ['className', 'cssModule', 'right', 'tag']);
-
-  var classes = mapToCssModules(classNames(className, 'dropdown-menu', {
-    'dropdown-menu-right': right,
-    show: context.isOpen
-  }), cssModule);
-
-  return React__default.createElement(Tag, _extends({}, attributes, { tabIndex: '-1', 'aria-hidden': !context.isOpen, role: 'menu', className: classes }));
-};
-
-DropdownMenu.propTypes = propTypes$11;
-DropdownMenu.defaultProps = defaultProps$11;
-DropdownMenu.contextTypes = contextTypes;
-
-var propTypes$13 = {
-  active: PropTypes.bool,
-  block: PropTypes.bool,
-  color: PropTypes.string,
-  disabled: PropTypes.bool,
-  outline: PropTypes.bool,
-  tag: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-  getRef: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-  onClick: PropTypes.func,
-  size: PropTypes.string,
-  children: PropTypes.node,
-  className: PropTypes.string,
-  cssModule: PropTypes.object
-};
-
-var defaultProps$13 = {
-  color: 'secondary',
-  tag: 'button'
-};
-
-var Button = function (_React$Component) {
-  inherits(Button, _React$Component);
-
-  function Button(props) {
-    classCallCheck(this, Button);
-
-    var _this = possibleConstructorReturn(this, (Button.__proto__ || Object.getPrototypeOf(Button)).call(this, props));
-
-    _this.onClick = _this.onClick.bind(_this);
-    return _this;
-  }
-
-  createClass(Button, [{
-    key: 'onClick',
-    value: function onClick(e) {
-      if (this.props.disabled) {
-        e.preventDefault();
-        return;
-      }
-
-      if (this.props.onClick) {
-        this.props.onClick(e);
-      }
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      var _props = this.props,
-          active = _props.active,
-          block = _props.block,
-          className = _props.className,
-          cssModule = _props.cssModule,
-          color = _props.color,
-          outline = _props.outline,
-          size = _props.size,
-          Tag = _props.tag,
-          getRef = _props.getRef,
-          attributes = objectWithoutProperties(_props, ['active', 'block', 'className', 'cssModule', 'color', 'outline', 'size', 'tag', 'getRef']);
-
-
-      var classes = mapToCssModules(classNames(className, 'btn', 'btn' + (outline ? '-outline' : '') + '-' + color, size ? 'btn-' + size : false, block ? 'btn-block' : false, { active: active, disabled: this.props.disabled }), cssModule);
-
-      if (attributes.href && Tag === 'button') {
-        Tag = 'a';
-      }
-
-      return React__default.createElement(Tag, _extends({
-        type: Tag === 'button' && attributes.onClick ? 'button' : undefined
-      }, attributes, {
-        className: classes,
-        ref: getRef,
-        onClick: this.onClick
-      }));
-    }
-  }]);
-  return Button;
-}(React__default.Component);
-
-Button.propTypes = propTypes$13;
-Button.defaultProps = defaultProps$13;
-
-var propTypes$12 = {
-  caret: PropTypes.bool,
-  color: PropTypes.string,
-  children: PropTypes.node,
-  className: PropTypes.string,
-  cssModule: PropTypes.object,
-  disabled: PropTypes.bool,
-  onClick: PropTypes.func,
-  'data-toggle': PropTypes.string,
-  'aria-haspopup': PropTypes.bool,
-  split: PropTypes.bool,
-  tag: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-  nav: PropTypes.bool
-};
-
-var defaultProps$12 = {
-  'data-toggle': 'dropdown',
-  'aria-haspopup': true,
-  color: 'secondary'
-};
-
-var contextTypes$1 = {
-  isOpen: PropTypes.bool.isRequired,
-  toggle: PropTypes.func.isRequired
-};
-
-var DropdownToggle = function (_React$Component) {
-  inherits(DropdownToggle, _React$Component);
-
-  function DropdownToggle(props) {
-    classCallCheck(this, DropdownToggle);
-
-    var _this = possibleConstructorReturn(this, (DropdownToggle.__proto__ || Object.getPrototypeOf(DropdownToggle)).call(this, props));
-
-    _this.onClick = _this.onClick.bind(_this);
-    return _this;
-  }
-
-  createClass(DropdownToggle, [{
-    key: 'onClick',
-    value: function onClick(e) {
-      if (this.props.disabled) {
-        e.preventDefault();
-        return;
-      }
-
-      if (this.props.nav && !this.props.tag) {
-        e.preventDefault();
-      }
-
-      if (this.props.onClick) {
-        this.props.onClick(e);
-      }
-
-      this.context.toggle();
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      var _props = this.props,
-          className = _props.className,
-          color = _props.color,
-          cssModule = _props.cssModule,
-          caret = _props.caret,
-          split = _props.split,
-          nav = _props.nav,
-          tag = _props.tag,
-          props = objectWithoutProperties(_props, ['className', 'color', 'cssModule', 'caret', 'split', 'nav', 'tag']);
-
-      var ariaLabel = props['aria-label'] || 'Toggle Dropdown';
-      var classes = mapToCssModules(classNames(className, {
-        'dropdown-toggle': caret || split,
-        'dropdown-toggle-split': split,
-        'nav-link': nav
-      }), cssModule);
-      var children = props.children || React__default.createElement(
-        'span',
-        { className: 'sr-only' },
-        ariaLabel
-      );
-
-      var Tag = void 0;
-
-      if (nav && !tag) {
-        Tag = 'a';
-        props.href = '#';
-      } else if (!tag) {
-        Tag = Button;
-        props.color = color;
-        props.cssModule = cssModule;
-      } else {
-        Tag = tag;
-      }
-
-      return React__default.createElement(Tag, _extends({}, props, {
-        className: classes,
-        onClick: this.onClick,
-        'aria-haspopup': 'true',
-        'aria-expanded': this.context.isOpen,
-        children: children
-      }));
-    }
-  }]);
-  return DropdownToggle;
-}(React__default.Component);
-
-DropdownToggle.propTypes = propTypes$12;
-DropdownToggle.defaultProps = defaultProps$12;
-DropdownToggle.contextTypes = contextTypes$1;
-
 /* eslint react/no-find-dom-node: 0 */
 // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/no-find-dom-node.md
 
 var propTypes$9 = {
   disabled: PropTypes.bool,
   dropup: PropTypes.bool,
-  right: PropTypes.bool,
-  placementPrefix: PropTypes.string,
   group: PropTypes.bool,
   isOpen: PropTypes.bool,
   size: PropTypes.string,
   tag: PropTypes.string,
-  tether: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
   toggle: PropTypes.func,
   children: PropTypes.node,
   className: PropTypes.string,
@@ -958,16 +627,15 @@ var propTypes$9 = {
 
 var defaultProps$9 = {
   isOpen: false,
-  tag: 'div',
-  placementPrefix: 'dropdown-menu'
+  dropup: false,
+  tag: 'div'
 };
 
 var childContextTypes = {
   toggle: PropTypes.func.isRequired,
-  isOpen: PropTypes.bool.isRequired
+  isOpen: PropTypes.bool.isRequired,
+  dropup: PropTypes.bool.isRequired
 };
-
-var i = 0;
 
 var Dropdown = function (_React$Component) {
   inherits(Dropdown, _React$Component);
@@ -989,7 +657,8 @@ var Dropdown = function (_React$Component) {
     value: function getChildContext() {
       return {
         toggle: this.props.toggle,
-        isOpen: this.props.isOpen
+        isOpen: this.props.isOpen,
+        dropup: this.props.dropup
       };
     }
   }, {
@@ -1033,10 +702,6 @@ var Dropdown = function (_React$Component) {
   }, {
     key: 'handleProps',
     value: function handleProps() {
-      if (this.props.tether) {
-        return;
-      }
-
       if (this.props.isOpen) {
         this.addEvents();
       } else {
@@ -1050,68 +715,26 @@ var Dropdown = function (_React$Component) {
         return e && e.preventDefault();
       }
 
-      return this.props.toggle();
-    }
-  }, {
-    key: 'renderChildren',
-    value: function renderChildren() {
-      var _this2 = this;
-
-      var _omit = omit(this.props, ['toggle', 'tag']),
-          children = _omit.children,
-          dropup = _omit.dropup,
-          right = _omit.right,
-          attrs = objectWithoutProperties(_omit, ['children', 'dropup', 'right']);
-
-      return React__default.Children.map(React__default.Children.toArray(children), function (child) {
-        if (child.type === DropdownToggle || child.props['data-toggle'] === 'dropdown') {
-          _this2.id = _this2.id || child.props.id || 'dropdown-' + ++i;
-          return React__default.cloneElement(child, { id: _this2.id });
-        }
-        if (child.type === DropdownMenu || child.props.type === 'dropdown-menu') {
-          var position1 = 'bottom';
-          var position2 = 'start';
-          if (dropup) {
-            position1 = 'top';
-          }
-          if (right) {
-            position2 = 'end';
-          }
-          attrs.placement = position1 + '-' + position2;
-          return React__default.createElement(
-            PopperContent,
-            _extends({}, attrs, { target: _this2.id }),
-            child
-          );
-        }
-
-        return child;
-      });
+      return this.props.toggle(e);
     }
   }, {
     key: 'render',
     value: function render() {
       var _classNames;
 
-      var _omit2 = omit(this.props, ['toggle', 'placementPrefix', 'right']),
-          className = _omit2.className,
-          cssModule = _omit2.cssModule,
-          dropup = _omit2.dropup,
-          group = _omit2.group,
-          size = _omit2.size,
-          Tag = _omit2.tag,
-          isOpen = _omit2.isOpen,
-          attributes = objectWithoutProperties(_omit2, ['className', 'cssModule', 'dropup', 'group', 'size', 'tag', 'isOpen']);
+      var _omit = omit(this.props, ['toggle', 'disabled']),
+          className = _omit.className,
+          cssModule = _omit.cssModule,
+          dropup = _omit.dropup,
+          isOpen = _omit.isOpen,
+          group = _omit.group,
+          size = _omit.size,
+          attrs = objectWithoutProperties(_omit, ['className', 'cssModule', 'dropup', 'isOpen', 'group', 'size']);
 
       var classes = mapToCssModules(classNames(className, (_classNames = {
         'btn-group': group
       }, defineProperty(_classNames, 'btn-group-' + size, !!size), defineProperty(_classNames, 'dropdown', !group), defineProperty(_classNames, 'show', isOpen), defineProperty(_classNames, 'dropup', dropup), _classNames)), cssModule);
-
-      return React__default.createElement(
-        Tag,
-        _extends({}, attributes, { className: classes }),
-        this.renderChildren()
-      );
+      return React__default.createElement(reactPopper.Manager, _extends({}, attrs, { className: classes }));
     }
   }]);
   return Dropdown;
@@ -1147,7 +770,7 @@ var NavDropdown = function NavDropdown(props) {
 NavDropdown.propTypes = propTypes$8;
 NavDropdown.defaultProps = defaultProps$8;
 
-var propTypes$14 = {
+var propTypes$10 = {
   tag: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   getRef: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   disabled: PropTypes.bool,
@@ -1158,7 +781,7 @@ var propTypes$14 = {
   href: PropTypes.any
 };
 
-var defaultProps$14 = {
+var defaultProps$10 = {
   tag: 'a'
 };
 
@@ -1213,16 +836,16 @@ var NavLink = function (_React$Component) {
   return NavLink;
 }(React__default.Component);
 
-NavLink.propTypes = propTypes$14;
-NavLink.defaultProps = defaultProps$14;
+NavLink.propTypes = propTypes$10;
+NavLink.defaultProps = defaultProps$10;
 
-var propTypes$15 = {
+var propTypes$11 = {
   tag: PropTypes.string,
   className: PropTypes.string,
   cssModule: PropTypes.object
 };
 
-var defaultProps$15 = {
+var defaultProps$11 = {
   tag: 'ol'
 };
 
@@ -1237,17 +860,17 @@ var Breadcrumb = function Breadcrumb(props) {
   return React__default.createElement(Tag, _extends({}, attributes, { className: classes }));
 };
 
-Breadcrumb.propTypes = propTypes$15;
-Breadcrumb.defaultProps = defaultProps$15;
+Breadcrumb.propTypes = propTypes$11;
+Breadcrumb.defaultProps = defaultProps$11;
 
-var propTypes$16 = {
+var propTypes$12 = {
   tag: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   active: PropTypes.bool,
   className: PropTypes.string,
   cssModule: PropTypes.object
 };
 
-var defaultProps$16 = {
+var defaultProps$12 = {
   tag: 'li'
 };
 
@@ -1263,10 +886,91 @@ var BreadcrumbItem = function BreadcrumbItem(props) {
   return React__default.createElement(Tag, _extends({}, attributes, { className: classes }));
 };
 
-BreadcrumbItem.propTypes = propTypes$16;
-BreadcrumbItem.defaultProps = defaultProps$16;
+BreadcrumbItem.propTypes = propTypes$12;
+BreadcrumbItem.defaultProps = defaultProps$12;
 
-var propTypes$17 = {
+var propTypes$13 = {
+  active: PropTypes.bool,
+  block: PropTypes.bool,
+  color: PropTypes.string,
+  disabled: PropTypes.bool,
+  outline: PropTypes.bool,
+  tag: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+  innerRef: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+  onClick: PropTypes.func,
+  size: PropTypes.string,
+  children: PropTypes.node,
+  className: PropTypes.string,
+  cssModule: PropTypes.object
+};
+
+var defaultProps$13 = {
+  color: 'secondary',
+  tag: 'button'
+};
+
+var Button = function (_React$Component) {
+  inherits(Button, _React$Component);
+
+  function Button(props) {
+    classCallCheck(this, Button);
+
+    var _this = possibleConstructorReturn(this, (Button.__proto__ || Object.getPrototypeOf(Button)).call(this, props));
+
+    _this.onClick = _this.onClick.bind(_this);
+    return _this;
+  }
+
+  createClass(Button, [{
+    key: 'onClick',
+    value: function onClick(e) {
+      if (this.props.disabled) {
+        e.preventDefault();
+        return;
+      }
+
+      if (this.props.onClick) {
+        this.props.onClick(e);
+      }
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _props = this.props,
+          active = _props.active,
+          block = _props.block,
+          className = _props.className,
+          cssModule = _props.cssModule,
+          color = _props.color,
+          outline = _props.outline,
+          size = _props.size,
+          Tag = _props.tag,
+          innerRef = _props.innerRef,
+          attributes = objectWithoutProperties(_props, ['active', 'block', 'className', 'cssModule', 'color', 'outline', 'size', 'tag', 'innerRef']);
+
+
+      var classes = mapToCssModules(classNames(className, 'btn', 'btn' + (outline ? '-outline' : '') + '-' + color, size ? 'btn-' + size : false, block ? 'btn-block' : false, { active: active, disabled: this.props.disabled }), cssModule);
+
+      if (attributes.href && Tag === 'button') {
+        Tag = 'a';
+      }
+
+      return React__default.createElement(Tag, _extends({
+        type: Tag === 'button' && attributes.onClick ? 'button' : undefined
+      }, attributes, {
+        className: classes,
+        ref: innerRef,
+        onClick: this.onClick
+      }));
+    }
+  }]);
+  return Button;
+}(React__default.Component);
+
+Button.propTypes = propTypes$13;
+Button.defaultProps = defaultProps$13;
+
+var propTypes$14 = {
   children: PropTypes.node
 };
 
@@ -1274,9 +978,9 @@ var ButtonDropdown = function ButtonDropdown(props) {
   return React__default.createElement(Dropdown, _extends({ group: true }, props));
 };
 
-ButtonDropdown.propTypes = propTypes$17;
+ButtonDropdown.propTypes = propTypes$14;
 
-var propTypes$18 = {
+var propTypes$15 = {
   tag: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   'aria-label': PropTypes.string,
   className: PropTypes.string,
@@ -1286,7 +990,7 @@ var propTypes$18 = {
   vertical: PropTypes.bool
 };
 
-var defaultProps$17 = {
+var defaultProps$14 = {
   tag: 'div',
   role: 'group'
 };
@@ -1305,10 +1009,10 @@ var ButtonGroup = function ButtonGroup(props) {
   return React__default.createElement(Tag, _extends({}, attributes, { className: classes }));
 };
 
-ButtonGroup.propTypes = propTypes$18;
-ButtonGroup.defaultProps = defaultProps$17;
+ButtonGroup.propTypes = propTypes$15;
+ButtonGroup.defaultProps = defaultProps$14;
 
-var propTypes$19 = {
+var propTypes$16 = {
   tag: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   'aria-label': PropTypes.string,
   className: PropTypes.string,
@@ -1316,7 +1020,7 @@ var propTypes$19 = {
   role: PropTypes.string
 };
 
-var defaultProps$18 = {
+var defaultProps$15 = {
   tag: 'div',
   role: 'toolbar'
 };
@@ -1333,10 +1037,10 @@ var ButtonToolbar = function ButtonToolbar(props) {
   return React__default.createElement(Tag, _extends({}, attributes, { className: classes }));
 };
 
-ButtonToolbar.propTypes = propTypes$19;
-ButtonToolbar.defaultProps = defaultProps$18;
+ButtonToolbar.propTypes = propTypes$16;
+ButtonToolbar.defaultProps = defaultProps$15;
 
-var propTypes$20 = {
+var propTypes$17 = {
   children: PropTypes.node,
   active: PropTypes.bool,
   disabled: PropTypes.bool,
@@ -1349,11 +1053,11 @@ var propTypes$20 = {
   toggle: PropTypes.bool
 };
 
-var contextTypes$2 = {
+var contextTypes = {
   toggle: PropTypes.func
 };
 
-var defaultProps$19 = {
+var defaultProps$16 = {
   tag: 'button',
   toggle: true
 };
@@ -1384,7 +1088,7 @@ var DropdownItem = function (_React$Component) {
       }
 
       if (this.props.toggle) {
-        this.context.toggle();
+        this.context.toggle(e);
       }
     }
   }, {
@@ -1440,11 +1144,162 @@ var DropdownItem = function (_React$Component) {
   return DropdownItem;
 }(React__default.Component);
 
-DropdownItem.propTypes = propTypes$20;
-DropdownItem.defaultProps = defaultProps$19;
-DropdownItem.contextTypes = contextTypes$2;
+DropdownItem.propTypes = propTypes$17;
+DropdownItem.defaultProps = defaultProps$16;
+DropdownItem.contextTypes = contextTypes;
 
-var propTypes$21 = {
+var propTypes$18 = {
+  tag: PropTypes.string,
+  children: PropTypes.node.isRequired,
+  right: PropTypes.bool,
+  className: PropTypes.string,
+  cssModule: PropTypes.object
+};
+
+var defaultProps$17 = {
+  tag: 'div'
+};
+
+var contextTypes$1 = {
+  isOpen: PropTypes.bool.isRequired,
+  dropup: PropTypes.bool.isRequired
+};
+
+var DropdownMenu = function DropdownMenu(props, context) {
+  var className = props.className,
+      cssModule = props.cssModule,
+      right = props.right,
+      tag = props.tag,
+      attrs = objectWithoutProperties(props, ['className', 'cssModule', 'right', 'tag']);
+
+  var position1 = context.dropup ? 'top' : 'bottom';
+  var position2 = right ? 'end' : 'start';
+  var classes = mapToCssModules(classNames(className, 'dropdown-menu', {
+    'dropdown-menu-right': right,
+    show: context.isOpen
+  }), cssModule);
+
+  attrs.placement = position1 + '-' + position2;
+
+  return React__default.createElement(reactPopper.Popper, _extends({}, attrs, { component: tag, tabIndex: '-1', 'aria-hidden': !context.isOpen, role: 'menu', className: classes }));
+};
+
+DropdownMenu.propTypes = propTypes$18;
+DropdownMenu.defaultProps = defaultProps$17;
+DropdownMenu.contextTypes = contextTypes$1;
+
+var propTypes$19 = {
+  caret: PropTypes.bool,
+  color: PropTypes.string,
+  children: PropTypes.node,
+  className: PropTypes.string,
+  cssModule: PropTypes.object,
+  disabled: PropTypes.bool,
+  onClick: PropTypes.func,
+  'data-toggle': PropTypes.string,
+  'aria-haspopup': PropTypes.bool,
+  split: PropTypes.bool,
+  tag: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
+  nav: PropTypes.bool
+};
+
+var defaultProps$18 = {
+  'data-toggle': 'dropdown',
+  'aria-haspopup': true,
+  color: 'secondary'
+};
+
+var contextTypes$2 = {
+  isOpen: PropTypes.bool.isRequired,
+  toggle: PropTypes.func.isRequired
+};
+
+var DropdownToggle = function (_React$Component) {
+  inherits(DropdownToggle, _React$Component);
+
+  function DropdownToggle(props) {
+    classCallCheck(this, DropdownToggle);
+
+    var _this = possibleConstructorReturn(this, (DropdownToggle.__proto__ || Object.getPrototypeOf(DropdownToggle)).call(this, props));
+
+    _this.onClick = _this.onClick.bind(_this);
+    return _this;
+  }
+
+  createClass(DropdownToggle, [{
+    key: 'onClick',
+    value: function onClick(e) {
+      if (this.props.disabled) {
+        e.preventDefault();
+        return;
+      }
+
+      if (this.props.nav && !this.props.tag) {
+        e.preventDefault();
+      }
+
+      if (this.props.onClick) {
+        this.props.onClick(e);
+      }
+
+      this.context.toggle(e);
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _props = this.props,
+          className = _props.className,
+          color = _props.color,
+          cssModule = _props.cssModule,
+          caret = _props.caret,
+          split = _props.split,
+          nav = _props.nav,
+          tag = _props.tag,
+          props = objectWithoutProperties(_props, ['className', 'color', 'cssModule', 'caret', 'split', 'nav', 'tag']);
+
+      var ariaLabel = props['aria-label'] || 'Toggle Dropdown';
+      var classes = mapToCssModules(classNames(className, {
+        'dropdown-toggle': caret || split,
+        'dropdown-toggle-split': split,
+        'nav-link': nav
+      }), cssModule);
+      var children = props.children || React__default.createElement(
+        'span',
+        { className: 'sr-only' },
+        ariaLabel
+      );
+
+      var Tag = void 0;
+
+      if (nav && !tag) {
+        Tag = 'a';
+        props.href = '#';
+      } else if (!tag) {
+        Tag = Button;
+        props.color = color;
+        props.cssModule = cssModule;
+      } else {
+        Tag = tag;
+      }
+
+      return React__default.createElement(reactPopper.Target, _extends({}, props, {
+        className: classes,
+        component: Tag,
+        onClick: this.onClick,
+        'aria-haspopup': 'true',
+        'aria-expanded': this.context.isOpen,
+        children: children
+      }));
+    }
+  }]);
+  return DropdownToggle;
+}(React__default.Component);
+
+DropdownToggle.propTypes = propTypes$19;
+DropdownToggle.defaultProps = defaultProps$18;
+DropdownToggle.contextTypes = contextTypes$2;
+
+var propTypes$20 = {
   baseClass: PropTypes.string,
   baseClassIn: PropTypes.string,
   tag: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
@@ -1460,7 +1315,7 @@ var propTypes$21 = {
   onEnter: PropTypes.func
 };
 
-var defaultProps$20 = {
+var defaultProps$19 = {
   tag: 'div',
   baseClass: 'fade',
   baseClassIn: 'show',
@@ -1576,7 +1431,7 @@ var Fade = function (_React$Component) {
           cssModule = _props.cssModule,
           Tag = _props.tag;
 
-      var attributes = omit(this.props, Object.keys(propTypes$21));
+      var attributes = omit(this.props, Object.keys(propTypes$20));
 
       var classes = mapToCssModules(classNames(className, baseClass, this.state.mounted ? baseClassIn : false), cssModule);
 
@@ -1586,10 +1441,10 @@ var Fade = function (_React$Component) {
   return Fade;
 }(React__default.Component);
 
-Fade.propTypes = propTypes$21;
-Fade.defaultProps = defaultProps$20;
+Fade.propTypes = propTypes$20;
+Fade.defaultProps = defaultProps$19;
 
-var propTypes$22 = {
+var propTypes$21 = {
   color: PropTypes.string,
   pill: PropTypes.bool,
   tag: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
@@ -1598,7 +1453,7 @@ var propTypes$22 = {
   cssModule: PropTypes.object
 };
 
-var defaultProps$21 = {
+var defaultProps$20 = {
   color: 'default',
   pill: false,
   tag: 'span'
@@ -1618,10 +1473,10 @@ var Badge = function Badge(props) {
   return React__default.createElement(Tag, _extends({}, attributes, { className: classes }));
 };
 
-Badge.propTypes = propTypes$22;
-Badge.defaultProps = defaultProps$21;
+Badge.propTypes = propTypes$21;
+Badge.defaultProps = defaultProps$20;
 
-var propTypes$23 = {
+var propTypes$22 = {
   tag: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   inverse: PropTypes.bool,
   color: PropTypes.string,
@@ -1632,7 +1487,7 @@ var propTypes$23 = {
   cssModule: PropTypes.object
 };
 
-var defaultProps$22 = {
+var defaultProps$21 = {
   tag: 'div'
 };
 
@@ -1652,16 +1507,16 @@ var Card = function Card(props) {
   return React__default.createElement(Tag, _extends({}, attributes, { className: classes }));
 };
 
-Card.propTypes = propTypes$23;
-Card.defaultProps = defaultProps$22;
+Card.propTypes = propTypes$22;
+Card.defaultProps = defaultProps$21;
 
-var propTypes$24 = {
+var propTypes$23 = {
   tag: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   className: PropTypes.string,
   cssModule: PropTypes.object
 };
 
-var defaultProps$23 = {
+var defaultProps$22 = {
   tag: 'div'
 };
 
@@ -1676,16 +1531,16 @@ var CardGroup = function CardGroup(props) {
   return React__default.createElement(Tag, _extends({}, attributes, { className: classes }));
 };
 
-CardGroup.propTypes = propTypes$24;
-CardGroup.defaultProps = defaultProps$23;
+CardGroup.propTypes = propTypes$23;
+CardGroup.defaultProps = defaultProps$22;
 
-var propTypes$25 = {
+var propTypes$24 = {
   tag: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   className: PropTypes.string,
   cssModule: PropTypes.object
 };
 
-var defaultProps$24 = {
+var defaultProps$23 = {
   tag: 'div'
 };
 
@@ -1700,16 +1555,16 @@ var CardDeck = function CardDeck(props) {
   return React__default.createElement(Tag, _extends({}, attributes, { className: classes }));
 };
 
-CardDeck.propTypes = propTypes$25;
-CardDeck.defaultProps = defaultProps$24;
+CardDeck.propTypes = propTypes$24;
+CardDeck.defaultProps = defaultProps$23;
 
-var propTypes$26 = {
+var propTypes$25 = {
   tag: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   className: PropTypes.string,
   cssModule: PropTypes.object
 };
 
-var defaultProps$25 = {
+var defaultProps$24 = {
   tag: 'div'
 };
 
@@ -1724,16 +1579,16 @@ var CardColumns = function CardColumns(props) {
   return React__default.createElement(Tag, _extends({}, attributes, { className: classes }));
 };
 
-CardColumns.propTypes = propTypes$26;
-CardColumns.defaultProps = defaultProps$25;
+CardColumns.propTypes = propTypes$25;
+CardColumns.defaultProps = defaultProps$24;
 
-var propTypes$27 = {
+var propTypes$26 = {
   tag: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   className: PropTypes.string,
   cssModule: PropTypes.object
 };
 
-var defaultProps$26 = {
+var defaultProps$25 = {
   tag: 'div'
 };
 
@@ -1748,22 +1603,22 @@ var CardBody = function CardBody(props) {
   return React__default.createElement(Tag, _extends({}, attributes, { className: classes }));
 };
 
-CardBody.propTypes = propTypes$27;
-CardBody.defaultProps = defaultProps$26;
+CardBody.propTypes = propTypes$26;
+CardBody.defaultProps = defaultProps$25;
 
 function CardBlock(props) {
   warnOnce('The "CardBlock" component has been deprecated.\nPlease use component "CardBody".');
   return React__default.createElement(CardBody, props);
 }
 
-var propTypes$28 = {
+var propTypes$27 = {
   tag: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   getRef: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   className: PropTypes.string,
   cssModule: PropTypes.object
 };
 
-var defaultProps$27 = {
+var defaultProps$26 = {
   tag: 'a'
 };
 
@@ -1779,16 +1634,16 @@ var CardLink = function CardLink(props) {
   return React__default.createElement(Tag, _extends({}, attributes, { ref: getRef, className: classes }));
 };
 
-CardLink.propTypes = propTypes$28;
-CardLink.defaultProps = defaultProps$27;
+CardLink.propTypes = propTypes$27;
+CardLink.defaultProps = defaultProps$26;
 
-var propTypes$29 = {
+var propTypes$28 = {
   tag: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   className: PropTypes.string,
   cssModule: PropTypes.object
 };
 
-var defaultProps$28 = {
+var defaultProps$27 = {
   tag: 'div'
 };
 
@@ -1803,16 +1658,16 @@ var CardFooter = function CardFooter(props) {
   return React__default.createElement(Tag, _extends({}, attributes, { className: classes }));
 };
 
-CardFooter.propTypes = propTypes$29;
-CardFooter.defaultProps = defaultProps$28;
+CardFooter.propTypes = propTypes$28;
+CardFooter.defaultProps = defaultProps$27;
 
-var propTypes$30 = {
+var propTypes$29 = {
   tag: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   className: PropTypes.string,
   cssModule: PropTypes.object
 };
 
-var defaultProps$29 = {
+var defaultProps$28 = {
   tag: 'div'
 };
 
@@ -1827,10 +1682,10 @@ var CardHeader = function CardHeader(props) {
   return React__default.createElement(Tag, _extends({}, attributes, { className: classes }));
 };
 
-CardHeader.propTypes = propTypes$30;
-CardHeader.defaultProps = defaultProps$29;
+CardHeader.propTypes = propTypes$29;
+CardHeader.defaultProps = defaultProps$28;
 
-var propTypes$31 = {
+var propTypes$30 = {
   tag: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   top: PropTypes.bool,
   bottom: PropTypes.bool,
@@ -1838,7 +1693,7 @@ var propTypes$31 = {
   cssModule: PropTypes.object
 };
 
-var defaultProps$30 = {
+var defaultProps$29 = {
   tag: 'img'
 };
 
@@ -1864,16 +1719,16 @@ var CardImg = function CardImg(props) {
   return React__default.createElement(Tag, _extends({}, attributes, { className: classes }));
 };
 
-CardImg.propTypes = propTypes$31;
-CardImg.defaultProps = defaultProps$30;
+CardImg.propTypes = propTypes$30;
+CardImg.defaultProps = defaultProps$29;
 
-var propTypes$32 = {
+var propTypes$31 = {
   tag: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   className: PropTypes.string,
   cssModule: PropTypes.object
 };
 
-var defaultProps$31 = {
+var defaultProps$30 = {
   tag: 'div'
 };
 
@@ -1888,8 +1743,8 @@ var CardImgOverlay = function CardImgOverlay(props) {
   return React__default.createElement(Tag, _extends({}, attributes, { className: classes }));
 };
 
-CardImgOverlay.propTypes = propTypes$32;
-CardImgOverlay.defaultProps = defaultProps$31;
+CardImgOverlay.propTypes = propTypes$31;
+CardImgOverlay.defaultProps = defaultProps$30;
 
 var Carousel = function (_React$Component) {
   inherits(Carousel, _React$Component);
@@ -2261,13 +2116,13 @@ CarouselIndicators.propTypes = {
   onClickHandler: PropTypes.func.isRequired
 };
 
-var propTypes$33 = {
+var propTypes$32 = {
   tag: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   className: PropTypes.string,
   cssModule: PropTypes.object
 };
 
-var defaultProps$32 = {
+var defaultProps$31 = {
   tag: 'h6'
 };
 
@@ -2282,16 +2137,16 @@ var CardSubtitle = function CardSubtitle(props) {
   return React__default.createElement(Tag, _extends({}, attributes, { className: classes }));
 };
 
-CardSubtitle.propTypes = propTypes$33;
-CardSubtitle.defaultProps = defaultProps$32;
+CardSubtitle.propTypes = propTypes$32;
+CardSubtitle.defaultProps = defaultProps$31;
 
-var propTypes$34 = {
+var propTypes$33 = {
   tag: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   className: PropTypes.string,
   cssModule: PropTypes.object
 };
 
-var defaultProps$33 = {
+var defaultProps$32 = {
   tag: 'p'
 };
 
@@ -2306,16 +2161,16 @@ var CardText = function CardText(props) {
   return React__default.createElement(Tag, _extends({}, attributes, { className: classes }));
 };
 
-CardText.propTypes = propTypes$34;
-CardText.defaultProps = defaultProps$33;
+CardText.propTypes = propTypes$33;
+CardText.defaultProps = defaultProps$32;
 
-var propTypes$35 = {
+var propTypes$34 = {
   tag: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   className: PropTypes.string,
   cssModule: PropTypes.object
 };
 
-var defaultProps$34 = {
+var defaultProps$33 = {
   tag: 'h4'
 };
 
@@ -2330,8 +2185,111 @@ var CardTitle = function CardTitle(props) {
   return React__default.createElement(Tag, _extends({}, attributes, { className: classes }));
 };
 
-CardTitle.propTypes = propTypes$35;
-CardTitle.defaultProps = defaultProps$34;
+CardTitle.propTypes = propTypes$34;
+CardTitle.defaultProps = defaultProps$33;
+
+var PopperTargetHelper = function PopperTargetHelper(props, context) {
+  context.popperManager.setTargetNode(getTarget(props.target));
+  return null;
+};
+
+PopperTargetHelper.contextTypes = {
+  popperManager: PropTypes.object.isRequired
+};
+
+PopperTargetHelper.propTypes = {
+  target: PropTypes.oneOfType([PropTypes.string, PropTypes.func, DOMElement]).isRequired
+};
+
+var propTypes$35 = {
+  children: PropTypes.node.isRequired,
+  className: PropTypes.string,
+  placement: PropTypes.string,
+  placementPrefix: PropTypes.string,
+  tag: PropTypes.string,
+  isOpen: PropTypes.bool.isRequired,
+  cssModule: PropTypes.object,
+  offset: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  fallbackPlacement: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
+  target: PropTypes.oneOfType([PropTypes.string, PropTypes.func, DOMElement]).isRequired
+};
+
+var defaultProps$34 = {
+  placement: 'auto',
+  isOpen: false,
+  offset: 0,
+  fallbackPlacement: 'flip',
+  tag: 'span'
+};
+
+var PopperContent = function (_React$Component) {
+  inherits(PopperContent, _React$Component);
+
+  function PopperContent(props) {
+    classCallCheck(this, PopperContent);
+
+    var _this = possibleConstructorReturn(this, (PopperContent.__proto__ || Object.getPrototypeOf(PopperContent)).call(this, props));
+
+    _this.handlePlacementChange = _this.handlePlacementChange.bind(_this);
+    _this.state = {};
+    return _this;
+  }
+
+  createClass(PopperContent, [{
+    key: 'handlePlacementChange',
+    value: function handlePlacementChange(data) {
+      if (this.state.placement !== data.placement) {
+        this.setState({ placement: data.placement });
+      }
+      return data;
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _props = this.props,
+          cssModule = _props.cssModule,
+          children = _props.children,
+          isOpen = _props.isOpen,
+          target = _props.target,
+          offset = _props.offset,
+          fallbackPlacement = _props.fallbackPlacement,
+          placementPrefix = _props.placementPrefix,
+          className = _props.className,
+          tag = _props.tag,
+          attrs = objectWithoutProperties(_props, ['cssModule', 'children', 'isOpen', 'target', 'offset', 'fallbackPlacement', 'placementPrefix', 'className', 'tag']);
+
+      var arrowClassName = mapToCssModules('arrow', cssModule);
+      var placement = (this.state.placement || attrs.placement).split('-')[0];
+      var popperClassName = mapToCssModules(classNames(className, placementPrefix ? placementPrefix + '-' + placement : placement), this.props.cssModule);
+
+      var modifiers = {
+        offset: { offset: offset },
+        flip: { behavior: fallbackPlacement },
+        update: {
+          enabled: true,
+          order: 950,
+          fn: this.handlePlacementChange
+        }
+      };
+
+      return React__default.createElement(
+        reactPopper.Manager,
+        { tag: tag },
+        React__default.createElement(PopperTargetHelper, { target: target }),
+        isOpen && React__default.createElement(
+          reactPopper.Popper,
+          _extends({ modifiers: modifiers }, attrs, { className: popperClassName }),
+          children,
+          React__default.createElement(reactPopper.Arrow, { className: arrowClassName })
+        )
+      );
+    }
+  }]);
+  return PopperContent;
+}(React__default.Component);
+
+PopperContent.propTypes = propTypes$35;
+PopperContent.defaultProps = defaultProps$34;
 
 var propTypes$36 = {
   placement: PropTypes.oneOf(popperAttachments),
@@ -4484,6 +4442,7 @@ exports.ModalHeader = ModalHeader;
 exports.ModalBody = ModalBody;
 exports.ModalFooter = ModalFooter;
 exports.PopperContent = PopperContent;
+exports.PopperTargetHelper = PopperTargetHelper;
 exports.Tooltip = Tooltip;
 exports.Table = Table;
 exports.ListGroup = ListGroup;
