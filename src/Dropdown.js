@@ -18,27 +18,19 @@ const propTypes = {
   toggle: PropTypes.func,
   children: PropTypes.node,
   className: PropTypes.string,
-  cssModule: PropTypes.object
+  cssModule: PropTypes.object,
 };
 
 const defaultProps = {
   isOpen: false,
   dropup: false,
   tag: 'div',
-<<<<<<< HEAD
-  placementPrefix: 'dropdown-menu'
-=======
->>>>>>> popper
 };
 
 const childContextTypes = {
   toggle: PropTypes.func.isRequired,
-<<<<<<< HEAD
-  isOpen: PropTypes.bool.isRequired
-=======
   isOpen: PropTypes.bool.isRequired,
   dropup: PropTypes.bool.isRequired,
->>>>>>> popper
 };
 
 class Dropdown extends React.Component {
@@ -104,48 +96,6 @@ class Dropdown extends React.Component {
       return e && e.preventDefault();
     }
 
-<<<<<<< HEAD
-    return this.props.toggle();
-  }
-
-  renderChildren() {
-    const { children, dropup, right, ...attrs } = omit(this.props, ['toggle', 'tag']);
-
-    return React.Children.map(React.Children.toArray(children), child => {
-      if (child.type === DropdownToggle || child.props['data-toggle'] === 'dropdown') {
-        this.id = this.id || child.props.id || `dropdown-${++i}`;
-        return React.cloneElement(child, { id: this.id });
-      }
-      if (child.type === DropdownMenu || child.props.type === 'dropdown-menu') {
-        let position1 = 'bottom';
-        let position2 = 'start';
-        if (dropup) {
-          position1 = 'top';
-        }
-        if (right) {
-          position2 = 'end';
-        }
-        attrs.placement = `${position1}-${position2}`;
-        return (
-          <PopperContent {...attrs} target={this.id}>
-            {child}
-          </PopperContent>
-        );
-      }
-
-      return child;
-    });
-  }
-
-  render() {
-    const { className, cssModule, dropup, group, size, tag: Tag, isOpen, ...attributes } = omit(
-      this.props,
-      ['toggle', 'placementPrefix', 'right']
-    );
-
-    const classes = mapToCssModules(
-      classNames(className, {
-=======
     return this.props.toggle(e);
   }
 
@@ -163,27 +113,14 @@ class Dropdown extends React.Component {
     const classes = mapToCssModules(classNames(
       className,
       {
->>>>>>> popper
         'btn-group': group,
         [`btn-group-${size}`]: !!size,
         dropdown: !group,
         show: isOpen,
         dropup: dropup
-<<<<<<< HEAD
-      }),
-      cssModule
-    );
-
-    return (
-      <Tag {...attributes} className={classes}>
-        {this.renderChildren()}
-      </Tag>
-    );
-=======
       }
     ), cssModule);
     return <Manager {...attrs} className={classes}>{}</Manager>;
->>>>>>> popper
   }
 }
 

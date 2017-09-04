@@ -1871,9 +1871,14 @@ var Carousel = function (_React$Component) {
 
       return React__default.createElement(
         'div',
-        { ref: function ref(carousel) {
+        {
+          ref: function ref(carousel) {
             _this3.carousel = carousel;
-          }, className: outerClasses, onMouseEnter: hoverStart, onMouseLeave: hoverEnd },
+          },
+          className: outerClasses,
+          onMouseEnter: hoverStart,
+          onMouseLeave: hoverEnd
+        },
         indicators,
         React__default.createElement(
           reactTransitionGroup.TransitionGroup,
@@ -1928,7 +1933,10 @@ var CarouselControl = function CarouselControl(props) {
   return React__default.createElement(
     'a',
     {
-      className: anchorClasses, role: 'button', onClick: function onClick(e) {
+      className: anchorClasses,
+      role: 'button',
+      tabIndex: '0',
+      onClick: function onClick(e) {
         e.preventDefault();
         onClickHandler();
       }
@@ -2062,9 +2070,12 @@ var CarouselItem = function (_React$Component) {
 
       return React__default.createElement(
         'div',
-        { className: itemClasses, ref: function ref(slide) {
+        {
+          className: itemClasses,
+          ref: function ref(slide) {
             _this2.slide = slide;
-          } },
+          }
+        },
         React__default.createElement('img', { className: classes, src: src, alt: altText }),
         children
       );
@@ -2095,10 +2106,12 @@ var CarouselIndicators = function CarouselIndicators(props) {
   var indicators = items.map(function (item, idx) {
     var indicatorClasses = mapToCssModules(classNames({ active: activeIndex === idx }), cssModule);
     return React__default.createElement('li', {
-      key: idx, onClick: function onClick(e) {
+      key: '' + item.src + item.caption + item.altText,
+      onClick: function onClick(e) {
         e.preventDefault();
         onClickHandler(idx);
-      }, className: indicatorClasses
+      },
+      className: indicatorClasses
     });
   });
 
@@ -2209,6 +2222,8 @@ var propTypes$35 = {
   tag: PropTypes.string,
   isOpen: PropTypes.bool.isRequired,
   cssModule: PropTypes.object,
+  wrapTag: PropTypes.string,
+  wrapClassName: PropTypes.string,
   offset: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   fallbackPlacement: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
   target: PropTypes.oneOfType([PropTypes.string, PropTypes.func, DOMElement]).isRequired
@@ -2219,7 +2234,7 @@ var defaultProps$34 = {
   isOpen: false,
   offset: 0,
   fallbackPlacement: 'flip',
-  tag: 'span'
+  wrapTag: 'span'
 };
 
 var PopperContent = function (_React$Component) {
@@ -2255,11 +2270,14 @@ var PopperContent = function (_React$Component) {
           fallbackPlacement = _props.fallbackPlacement,
           placementPrefix = _props.placementPrefix,
           className = _props.className,
+          wrapTag = _props.wrapTag,
+          wrapClassName = _props.wrapClassName,
           tag = _props.tag,
-          attrs = objectWithoutProperties(_props, ['cssModule', 'children', 'isOpen', 'target', 'offset', 'fallbackPlacement', 'placementPrefix', 'className', 'tag']);
+          attrs = objectWithoutProperties(_props, ['cssModule', 'children', 'isOpen', 'target', 'offset', 'fallbackPlacement', 'placementPrefix', 'className', 'wrapTag', 'wrapClassName', 'tag']);
 
       var arrowClassName = mapToCssModules('arrow', cssModule);
       var placement = (this.state.placement || attrs.placement).split('-')[0];
+      var managerClass = mapToCssModules(wrapClassName, this.props.cssModule);
       var popperClassName = mapToCssModules(classNames(className, placementPrefix ? placementPrefix + '-' + placement : placement), this.props.cssModule);
 
       var modifiers = {
@@ -2274,11 +2292,11 @@ var PopperContent = function (_React$Component) {
 
       return React__default.createElement(
         reactPopper.Manager,
-        { tag: tag },
+        { tag: wrapTag, className: managerClass },
         React__default.createElement(PopperTargetHelper, { target: target }),
         isOpen && React__default.createElement(
           reactPopper.Popper,
-          _extends({ modifiers: modifiers }, attrs, { className: popperClassName }),
+          _extends({ modifiers: modifiers }, attrs, { component: tag, className: popperClassName }),
           children,
           React__default.createElement(reactPopper.Arrow, { className: arrowClassName })
         )
@@ -2349,7 +2367,7 @@ var Popover = function (_React$Component) {
     value: function componentWillUnmount() {
       this.clearShowTimeout();
       this.clearHideTimeout();
-      this.addTargetEvents();
+      this.removeTargetEvents();
     }
   }, {
     key: 'getDelay',
@@ -2373,19 +2391,21 @@ var Popover = function (_React$Component) {
   }, {
     key: 'show',
     value: function show() {
-      this.clearShowTimeout();
+      this.clearHideTimeout();
       this.addTargetEvents();
       if (!this.props.isOpen) {
-        this.toggle();
+        this.clearShowTimeout();
+        this._showTimeout = setTimeout(this.toggle, this.getDelay('show'));
       }
     }
   }, {
     key: 'hide',
     value: function hide() {
-      this.clearHideTimeout();
+      this.clearShowTimeout();
       this.removeTargetEvents();
       if (this.props.isOpen) {
-        this.toggle();
+        this.clearHideTimeout();
+        this._hideTimeout = setTimeout(this.toggle, this.getDelay('hide'));
       }
     }
   }, {
@@ -2790,7 +2810,7 @@ var Modal = function (_React$Component) {
           className: mapToCssModules(classNames('modal-dialog', this.props.className, defineProperty({}, 'modal-' + this.props.size, this.props.size)), this.props.cssModule),
           role: 'document',
           ref: function ref(c) {
-            return _this2._dialog = c;
+            _this2._dialog = c;
           }
         }, attributes),
         React__default.createElement(
@@ -3642,7 +3662,7 @@ var Label = function Label(props) {
 
     delete attributes[colWidth];
 
-    if (!columnProp) {
+    if (!columnProp && columnProp !== '') {
       return;
     }
 
