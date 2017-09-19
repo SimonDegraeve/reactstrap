@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import PopperJS from 'popper.js';
 import PopperContent from './PopperContent';
-import { getTarget, DOMElement, mapToCssModules, omit, popperAttachments } from './utils';
+import { getTarget, DOMElement, mapToCssModules, omit } from './utils';
 
 const propTypes = {
-  placement: PropTypes.oneOf(popperAttachments),
+  placement: PropTypes.oneOf(PopperJS.placements),
   target: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.func,
@@ -120,11 +121,15 @@ class Popover extends React.Component {
   }
 
   addTargetEvents() {
-    document.addEventListener('click', this.handleDocumentClick, true);
+    ['click', 'touchstart'].forEach(event =>
+      document.addEventListener(event, this.handleDocumentClick, true)
+    );
   }
 
   removeTargetEvents() {
-    document.removeEventListener('click', this.handleDocumentClick, true);
+    ['click', 'touchstart'].forEach(event =>
+      document.removeEventListener(event, this.handleDocumentClick, true)
+    );
   }
 
   toggle(e) {
