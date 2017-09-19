@@ -66,11 +66,15 @@ class Dropdown extends React.Component {
   }
 
   addEvents() {
-    document.addEventListener('click', this.handleDocumentClick, true);
+    ['click', 'touchstart'].forEach(event =>
+      document.addEventListener(event, this.handleDocumentClick, true)
+    );
   }
 
   removeEvents() {
-    document.removeEventListener('click', this.handleDocumentClick, true);
+    ['click', 'touchstart'].forEach(event =>
+      document.removeEventListener(event, this.handleDocumentClick, true)
+    );
   }
 
   handleDocumentClick(e) {
@@ -120,7 +124,7 @@ class Dropdown extends React.Component {
         dropup: dropup
       }
     ), cssModule);
-    return <Manager {...attrs} className={classes}>{}</Manager>;
+    return <Manager {...attrs} className={classes} />;
   }
 }
 

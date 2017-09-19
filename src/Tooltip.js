@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import Popper from './PopperContent';
-import { getTarget, DOMElement, mapToCssModules, omit, popperAttachments } from './utils';
+import PopperJS from 'popper.js';
+import PopperContent from './PopperContent';
+import { getTarget, DOMElement, mapToCssModules, omit } from './utils';
 
 const propTypes = {
-  placement: PropTypes.oneOf(popperAttachments),
+  placement: PropTypes.oneOf(PopperJS.placements),
   target: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.func,
@@ -143,13 +144,17 @@ class Tooltip extends React.Component {
   addTargetEvents() {
     this._target.addEventListener('mouseover', this.onMouseOverTooltip, true);
     this._target.addEventListener('mouseout', this.onMouseLeaveTooltip, true);
-    document.addEventListener('click', this.handleDocumentClick, true);
+    ['click', 'touchstart'].forEach(event =>
+      document.addEventListener(event, this.handleDocumentClick, true)
+    );
   }
 
   removeTargetEvents() {
     this._target.removeEventListener('mouseover', this.onMouseOverTooltip, true);
     this._target.removeEventListener('mouseout', this.onMouseLeaveTooltip, true);
-    document.removeEventListener('click', this.handleDocumentClick, true);
+    ['click', 'touchstart'].forEach(event =>
+      document.removeEventListener(event, this.handleDocumentClick, true)
+    );
   }
 
   toggle(e) {
@@ -177,7 +182,7 @@ class Tooltip extends React.Component {
     ), this.props.cssModule);
 
     return (
-      <Popper
+      <PopperContent
         className={popperClasses}
         target={this.props.target}
         isOpen={this.props.isOpen}
@@ -190,7 +195,7 @@ class Tooltip extends React.Component {
           onMouseOver={this.onMouseOverTooltipContent}
           onMouseLeave={this.onMouseLeaveTooltipContent}
         />
-      </Popper>
+      </PopperContent>
     );
   }
 }

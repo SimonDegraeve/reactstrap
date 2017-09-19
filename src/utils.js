@@ -1,23 +1,5 @@
 import isFunction from 'lodash.isfunction';
 
-export const popperAttachments = [
-  'auto',
-  'auto-start',
-  'auto-end',
-  'top',
-  'top-start',
-  'top-end',
-  'right',
-  'right-start',
-  'right-end',
-  'bottom',
-  'bottom-start',
-  'bottom-end',
-  'left',
-  'left-start',
-  'left-end',
-];
-
 // https://github.com/twbs/bootstrap/blob/v4.0.0-alpha.4/js/src/modal.js#L436-L443
 export function getScrollbarWidth() {
   let scrollDiv = document.createElement('div');
@@ -126,3 +108,14 @@ export function getTarget(target) {
 
   return target;
 }
+
+
+/* eslint key-spacing: ["error", { afterColon: true, align: "value" }] */
+// These are all setup to match what is in the bootstrap _variables.scss
+// https://github.com/twbs/bootstrap/blob/v4-dev/scss/_variables.scss
+export const TransitionTimeouts = {
+  Fade:     150, // $transition-fade
+  Collapse: 350, // $transition-collapse
+  Modal:    300, // $modal-transition
+  Carousel: 600, // $carousel-transition
+};
